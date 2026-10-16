@@ -1,4 +1,4 @@
-name: Build Android App
+name: Build Owl Proxy APK
 
 on:
   push:
@@ -10,27 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
+    - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Set up Java
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Build Debug APK
+    - name: Install Android Build Tools & Capacitor
       run: |
-        if [ -f "./gradlew" ]; then
-          chmod +x gradlew
-          ./gradlew assembleDebug
-        else
-          mkdir -p app/build/outputs/apk/debug
-          echo "Owl Proxy App Placeholder" > app/build/outputs/apk/debug/app-debug.apk
-        fi
+        npm init -y
+        npm install @capacitor/core @capacitor/cli @capacitor/android
+        npx cap init "Owl Proxy Ultra" "com.owlproxy.app" --web-dir .
+        npx cap add android
+        npx cap sync android
 
-    - name: Upload APK Artifact
+    - name: Build Android APK
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleDebug
+
+    - name: Upload Working APK
       uses: actions/upload-artifact@v4
       with:
-        name: OwlProxy-APK
-        path: app/build/outputs/apk/debug/*.apk
+        name: OwlProxy-Ultra-APK
+        path: android/app/build/outputs/apk/debug/app-debug.apk
+
