@@ -1,15 +1,15 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="te">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Owl Proxy Lite</title>
+  <title>Owl Proxy App</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #0f172a; color: white; padding: 20px; }
-    .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px; }
-    button { background: #22c55e; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; }
+    body { font-family: sans-serif; text-align: center; background: #0f172a; color: white; padding: 20px; }
+    .card { background: #1e293b; padding: 25px; border-radius: 16px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    button { background: #22c55e; color: white; border: none; padding: 15px 35px; font-size: 18px; border-radius: 10px; cursor: pointer; }
     .disconnected { background: #ef4444; }
-    select { padding: 10px; font-size: 16px; border-radius: 6px; margin-bottom: 15px; }
+    select { padding: 12px; font-size: 16px; border-radius: 8px; width: 100%; max-width: 300px; margin-bottom: 20px; background: #334155; color: white; border: 1px solid #475569; }
   </style>
 </head>
 <body>
@@ -17,15 +17,16 @@
   <h1>🦉 Owl Proxy App</h1>
   
   <div class="card">
-    <label for="country">దేశాన్ని ఎంచుకోండి:</label><br><br>
+    <label for="country"><b>దేశాన్ని / IP ని ఎంచుకోండి:</b></label><br><br>
     <select id="country">
-      <option value="104.248.63.15:8080">🇺🇸 United States</option>
-      <option value="159.69.202.13:3128">🇩🇪 Germany</option>
+      <option value="104.248.63.15:8080">🇺🇸 United States (104.248.63.15)</option>
+      <option value="159.69.202.13:3128">🇩🇪 Germany (159.69.202.13)</option>
+      <option value="185.199.108.153:8080">🇬🇧 United Kingdom (185.199.108.153)</option>
     </select>
     
     <br><br>
     <button id="connectBtn" onclick="toggleConnection()">Connect</button>
-    <h3 id="status">Status: Disconnected</h3>
+    <h3 id="status">Status: Disconnected ❌</h3>
   </div>
 
   <script>
@@ -37,16 +38,14 @@
       const proxy = document.getElementById('country').value;
 
       if (!isConnected) {
-        // కనెక్ట్ అయ్యే లాజిక్
         status.innerText = "Status: Connecting to " + proxy + "...";
         setTimeout(() => {
           status.innerText = "Status: Connected ✅ (" + proxy + ")";
           btn.innerText = "Disconnect";
           btn.classList.add("disconnected");
           isConnected = true;
-        }, 2000);
+        }, 1500);
       } else {
-        // డిస్‌కనెక్ట్ అయ్యే లాజిక్
         status.innerText = "Status: Disconnected ❌";
         btn.innerText = "Connect";
         btn.classList.remove("disconnected");
