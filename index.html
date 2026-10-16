@@ -3,17 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owl Proxy</title>
+    <title>Owl Proxy Ultra</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>🦉 Owl Proxy</h1>
-        <div class="status-box">
-            <div id="status" class="disconnected">Disconnected</div>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">🦉 <span>Owl Proxy Ultra</span></div>
+            <div class="vip-badge">PRO</div>
+        </header>
+
+        <!-- Status Circle -->
+        <div class="status-container">
+            <div id="statusRing" class="circle disconnected">
+                <button id="connectBtn" onclick="toggleVPN()">
+                    <span id="powerIcon">⚡</span>
+                </button>
+            </div>
+            <h2 id="statusText">DISCONNECTED</h2>
+            <p id="ipText">Your IP: 182.72.10.45 (Exposed)</p>
         </div>
-        <button id="connectBtn" onclick="toggleConnection()">Connect</button>
+
+        <!-- Server Selector -->
+        <div class="server-card">
+            <label for="serverSelect">Select Location:</label>
+            <select id="serverSelect" onchange="changeServer()">
+                <option value="us">🇺🇸 United States (Fastest)</option>
+                <option value="sg">🇸🇬 Singapore (Low Ping)</option>
+                <option value="uk">🇬🇧 United Kingdom</option>
+                <option value="jp">🇯🇵 Japan</option>
+                <option value="de">🇩🇪 Germany</option>
+            </select>
+        </div>
+
+        <!-- Speed & Encryption Stats -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <small>DOWNLOAD</small>
+                <span id="downSpeed">0.0 MB/s</span>
+            </div>
+            <div class="stat-box">
+                <small>UPLOAD</small>
+                <span id="upSpeed">0.0 MB/s</span>
+            </div>
+            <div class="stat-box">
+                <small>ENCRYPTION</small>
+                <span id="encryptStatus" class="secure-off">AES-256 (OFF)</span>
+            </div>
+        </div>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
+
