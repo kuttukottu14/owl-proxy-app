@@ -22,33 +22,39 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '21'
+        java-version: '17'
 
     - name: Prepare Web Assets & Install Capacitor
       run: |
         mkdir -p www
         cp index.html style.css app.js www/ 2>/dev/null || echo "Files copied"
         npm init -y
-        npm install @capacitor/core @capacitor/cli @capacitor/android
+        npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
         npx cap init "Owl Proxy Ultra" "com.owlproxy.app" --web-dir www
         npx cap add android
         npx cap copy android
 
-    - name: Fix Duplicate Classes & Build APK
+    - name: Fix Duplicate Kotlin Classes & Build APK
       run: |
         cd android
-        # Duplicate classes సమస్య రాకుండా build.gradle లో exclusions యాడ్ చేయడం
-        echo "
-        android {
-            packagingOptions {
-                exclude 'META-INF/kotlinstdlib.kotlin_module'
-                exclude 'META-INF/versions/9/previous-compilation-data.bin'
+        
+        # Root build.gradle లో వర్షన్ కాన్ఫ్లిక్ట్‌లను ఫిక్స్ చేసేలా రూల్ యాడ్ చేయడం
+        cat << 'EOF' >> build.gradle
+        subprojects {
+            configurations.all {
+                resolutionStrategy {
+                    force "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+                    force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22"
+                    force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
+                }
+                exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+                exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
             }
         }
-        " >> app/build.gradle
-        
+        EOF
+
         chmod +x gradlew
-        ./gradlew assembleDebug
+        ./gradlew assembleDebug --no-daemon
 
     - name: Upload Working APK
       uses: actions/upload-artifact@v4
