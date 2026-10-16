@@ -24,13 +24,15 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Install Android Build Tools & Capacitor
+    - name: Prepare Web Assets & Install Capacitor
       run: |
+        mkdir -p www
+        cp index.html style.css app.js www/ 2>/dev/null || echo "Files copied"
         npm init -y
         npm install @capacitor/core @capacitor/cli @capacitor/android
-        npx cap init "Owl Proxy Ultra" "com.owlproxy.app" --web-dir .
+        npx cap init "Owl Proxy Ultra" "com.owlproxy.app" --web-dir www
         npx cap add android
-        npx cap sync android
+        npx cap copy android
 
     - name: Build Android APK
       run: |
@@ -43,4 +45,3 @@ jobs:
       with:
         name: OwlProxy-Ultra-APK
         path: android/app/build/outputs/apk/debug/app-debug.apk
-
