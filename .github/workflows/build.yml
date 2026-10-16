@@ -1,0 +1,44 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install Cordova & Build Tools
+      run: |
+        npm install -g cordova
+        npm install -g cordova-android
+
+    - name: Create Cordova Project
+      run: |
+        cordova create myApp com.owlproxy.app OwlProxy
+        cd myApp
+        rm -rf www/*
+        cp -r ../* www/ || true
+        cordova platform add android
+
+    - name: Build Android APK
+      run: |
+        cd myApp
+        cordova build android --verbose
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: OwlProxy-App-APK
+        path: myApp/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+￼Enter
