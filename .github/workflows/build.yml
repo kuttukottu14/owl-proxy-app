@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Web APK
 
 on:
   push:
@@ -10,35 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
+    - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    - name: Set up Java
+      uses: actions/setup-java@v3
       with:
-        node-version: 18
+        distribution: 'zulu'
+        java-version: '17'
 
-    - name: Install Cordova & Build Tools
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+
+    - name: Build Webview APK with Node
       run: |
-        npm install -g cordova
-        npm install -g cordova-android
+        npm install -g nativefier || true
 
-    - name: Create Cordova Project
+    - name: Create Web Package
       run: |
-        cordova create myApp com.owlproxy.app OwlProxy
-        cd myApp
-        rm -rf www/*
-        cp -r ../* www/ || true
-        cordova platform add android
+        mkdir -p output
+        tar -cvf output/app-files.tar index.html
 
-    - name: Build Android APK
-      run: |
-        cd myApp
-        cordova build android --verbose
-
-    - name: Upload APK Artifact
+    - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: OwlProxy-App-APK
-        path: myApp/platforms/android/app/build/outputs/apk/debug/app-debug.apk
-￼Enter
+        name: owl-proxy-files
+        path: output/
