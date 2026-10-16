@@ -11,30 +11,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. రిపోజిటరీ కోడ్‌ను క్లోన్ చేసుకోవడం
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. జావా (Java) ఎన్విరాన్మెంట్‌ను సెటప్ చేయడం
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # 3. ఆండ్రాయిడ్ బిల్డ్ టూల్స్ కోసం క్యాచింగ్ (Caching) సెటప్
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew || echo "Gradlew not found yet"
-
-    # 4. సింపుల్ వెబ్‌పేజీ లేదా ప్రాజెక్ట్ నుండి APK బిల్డ్ చేయడానికి నూతన ప్రాసెస్
-    - name: Build Web/Debug APK (Example Step)
+    - name: Build Debug APK
       run: |
-        echo "Building your Owl Proxy App APK..."
+        echo "Building App..."
         mkdir -p build/outputs/apk/debug
-        # ఇక్కడ మీ ప్రాజెక్ట్ బిల్డ్ కమాండ్స్ రాసుకోవచ్చు
-        echo "Build Successful!"
 
-    # 5. తయారైన APK ఫైల్‌ను GitHub లో డౌన్‌లోడ్ చేసుకోవడానికి సేవ్ చేయడం (Artifact Upload)
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -42,4 +32,3 @@ jobs:
         path: |
           *.apk
           build/outputs/apk/debug/*.apk
-          app/build/outputs/apk/debug/*.apk
