@@ -1,4 +1,4 @@
-herename: Build App
+name: Build App
 
 on:
   push:
