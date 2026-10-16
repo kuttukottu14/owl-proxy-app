@@ -34,9 +34,19 @@ jobs:
         npx cap add android
         npx cap copy android
 
-    - name: Build Android APK
+    - name: Fix Duplicate Classes & Build APK
       run: |
         cd android
+        # Duplicate classes సమస్య రాకుండా build.gradle లో exclusions యాడ్ చేయడం
+        echo "
+        android {
+            packagingOptions {
+                exclude 'META-INF/kotlinstdlib.kotlin_module'
+                exclude 'META-INF/versions/9/previous-compilation-data.bin'
+            }
+        }
+        " >> app/build.gradle
+        
         chmod +x gradlew
         ./gradlew assembleDebug
 
